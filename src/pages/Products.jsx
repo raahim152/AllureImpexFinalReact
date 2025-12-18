@@ -9,10 +9,18 @@ import BackToTop from '../components/Shared/BackToTop';
 import productService from '../services/productService';
 import uploadService from '../services/uploadService';
 import { toast } from 'react-hot-toast';
+import SearchBar from '../components/UI/SearchBar';
 
 const Products = () => {
-  const [databaseProducts, setDatabaseProducts] = useState([]);
+   const [databaseProducts, setDatabaseProducts] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [searchParams, setSearchParams] = useState({
+    q: '',
+    category: '',
+    featured: '',
+    sortBy: 'createdAt',
+    sortOrder: 'desc'
+  });
 
   // Fetch database products on component mount
   useEffect(() => {
@@ -22,14 +30,26 @@ const Products = () => {
   const fetchDatabaseProducts = async () => {
     try {
       setLoading(true);
-      const response = await productService.getProducts();
+      // Build query string from searchParams
+      const queryString = new URLSearchParams();
+      Object.entries(searchParams).forEach(([key, value]) => {
+        if (value) queryString.append(key, value);
+      });
+      
+      const response = await productService.getProducts(`?${queryString.toString()}`);
       setDatabaseProducts(response.data || []);
     } catch (error) {
-      console.error('Error fetching database products:', error);
-      // Don't show error toast - just fail silently
+      console.error('Error fetching products:', error);
     } finally {
       setLoading(false);
     }
+  };
+  const handleSearch = (searchValue, filters = {}) => {
+    setSearchParams(prev => ({
+      ...prev,
+      q: searchValue,
+      ...filters
+    }));
   };
 
   // Smooth scroll to section when page loads with hash
@@ -108,6 +128,19 @@ const Products = () => {
           </div>
         </div>
       </section>
+
+       {/* ... Your existing hero section ... */}
+
+{/* Add SearchBar here */}
+<section className="py-8 bg-white">
+  <div className="container mx-auto px-4 max-w-7xl">
+    <SearchBar 
+      onSearch={handleSearch}
+      showFilters={true}
+      placeholder="Search products by name, description, category..."
+    />
+  </div>
+</section>
 
       {/* NEW SECTION: Database Products (Add at the top) */}
       {databaseProducts.length > 0 && (

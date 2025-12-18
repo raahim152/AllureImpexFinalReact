@@ -1,4 +1,5 @@
 import api from './api';
+import axios from 'axios';
 
 const productService = {
   // Get all products
@@ -16,9 +17,15 @@ const productService = {
   },
 
   // Get single product
-  getProduct: async (id) => {
-    return await api.get(`/products/${id}`);
-  },
+  getProduct : async (queryParams = '') => {
+  try {
+    const response = await axios.get(`/api/products${queryParams}`);
+    return response.data;
+  } catch (error) {
+    console.error('Error fetching products:', error);
+    throw error;
+  }
+},
 
   // Create product (admin only)
   createProduct: async (productData) => {
