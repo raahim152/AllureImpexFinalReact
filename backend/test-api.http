@@ -1,0 +1,54 @@
+### Test server root
+GET http://localhost:5000
+
+### Test health endpoint
+GET http://localhost:5000/api/health
+
+### Register a new user
+POST http://localhost:5000/api/auth/register
+Content-Type: application/json
+
+{
+  "name": "John Doe",
+  "email": "john@example.com",
+  "password": "password123",
+  "phone": "+923008403618",
+  "company": "Test Company"
+}
+
+### Login
+POST http://localhost:5000/api/auth/login
+Content-Type: application/json
+
+{
+  "email": "john@example.com",
+  "password": "password123"
+}
+
+### Get all products
+GET http://localhost:5000/api/products
+
+### Get products by category
+GET http://localhost:5000/api/products?category=corrugated
+
+### Create a product (placeholder - no auth yet)
+POST http://localhost:5000/api/products
+Content-Type: application/json
+
+{
+  "name": "Corrugated Boxes",
+  "description": "High quality corrugated packaging",
+  "category": "corrugated",
+  "features": ["Custom Sizes", "Eco-Friendly", "Durable"]
+}
+
+### Upload a file
+POST http://localhost:5000/api/uploads
+Content-Type: multipart/form-data; boundary=boundary123
+
+--boundary123
+Content-Disposition: form-data; name="file"; filename="test.jpg"
+Content-Type: image/jpeg
+
+< ./test-image.jpg
+--boundary123--

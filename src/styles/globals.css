@@ -44,3 +44,54 @@ html {
 .nav-link:hover::after {
   width: 100%;
 }
+
+/* Admin Dashboard Styles */
+.sidebar {
+  scrollbar-width: thin;
+  scrollbar-color: #ffc61a #f1f5f9;
+}
+
+.sidebar::-webkit-scrollbar {
+  width: 4px;
+}
+
+.sidebar::-webkit-scrollbar-track {
+  background: #f1f5f9;
+}
+
+.sidebar::-webkit-scrollbar-thumb {
+  background: #ffc61a;
+  border-radius: 2px;
+}
+
+.stat-card {
+  transition: all 0.3s ease;
+}
+
+.stat-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 5px 10px -5px rgba(0, 0, 0, 0.04);
+}
+
+.nav-item {
+  transition: all 0.2s ease;
+}
+
+.nav-item:hover {
+  background-color: #fffdf4;
+  border-left-color: #ffc61a;
+}
+
+.nav-item.active {
+  background-color: #fff9e1;
+  border-left-color: #ffc61a;
+  color: #806000;
+}
+
+/* Line clamp for product descriptions */
+.line-clamp-2 {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}

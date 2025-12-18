@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
 
-const MobileMenu = ({ isOpen, onClose }) => {
+const MobileMenu = ({ isOpen, onClose, isAuthenticated, isAdmin, onLogout }) => {
   const location = useLocation();
 
   const isActive = (path) => {
@@ -41,6 +41,55 @@ const MobileMenu = ({ isOpen, onClose }) => {
         >
           Contact
         </Link>
+        
+        {/* Auth Links */}
+        {isAuthenticated ? (
+          <>
+            {isAdmin && (
+              <Link 
+                to="/admin" 
+                className={`font-medium transition-colors py-2 ${isActive('/admin') ? 'text-primary-500' : 'text-secondary-700 hover:text-primary-500'}`}
+                onClick={onClose}
+              >
+                Admin
+              </Link>
+            )}
+            <Link 
+              to="/dashboard" 
+              className={`font-medium transition-colors py-2 ${isActive('/dashboard') ? 'text-primary-500' : 'text-secondary-700 hover:text-primary-500'}`}
+              onClick={onClose}
+            >
+              Dashboard
+            </Link>
+            <button
+              onClick={() => {
+                onLogout();
+                onClose();
+              }}
+              className="text-secondary-700 hover:text-primary-500 transition-colors font-medium py-2 text-left"
+            >
+              Logout
+            </button>
+          </>
+        ) : (
+          <>
+            <Link 
+              to="/login" 
+              className="font-medium text-secondary-700 hover:text-primary-500 transition-colors py-2"
+              onClick={onClose}
+            >
+              Login
+            </Link>
+            <Link 
+              to="/register" 
+              className="bg-primary-500 text-white hover:bg-primary-600 px-6 py-2 rounded-lg shadow transition-all font-medium text-center"
+              onClick={onClose}
+            >
+              Register
+            </Link>
+          </>
+        )}
+        
         <Link 
           to="/contact" 
           className="bg-primary-500 text-white hover:bg-primary-600 px-6 py-2 rounded-lg shadow transition-all font-medium text-center mt-2"

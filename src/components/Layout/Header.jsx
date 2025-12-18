@@ -1,13 +1,21 @@
 import React, { useState } from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
+import { useAuth } from '../../context/AuthContext';
 import MobileMenu from './MobileMenu';
 
 const Header = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const location = useLocation();
+  const navigate = useNavigate();
+  const { user, isAuthenticated, isAdmin, logout } = useAuth();
 
   const isActive = (path) => {
     return location.pathname === path;
+  };
+
+  const handleLogout = () => {
+    logout();
+    navigate('/');
   };
 
   return (
@@ -32,7 +40,7 @@ const Header = () => {
             <i className={`fas ${mobileMenuOpen ? 'fa-times' : 'fa-bars'} text-xl`}></i>
           </button>
           
-          <nav className="hidden md:flex items-center space-x-8">
+          <nav className="hidden md:flex items-center space-x-6">
             <Link 
               to="/" 
               className={`nav-link font-medium transition-colors ${isActive('/') ? 'text-primary-500' : 'text-secondary-700 hover:text-primary-500'}`}
@@ -57,6 +65,48 @@ const Header = () => {
             >
               Contact
             </Link>
+            
+            {/* Auth Links */}
+            {isAuthenticated ? (
+              <div className="flex items-center space-x-4 pl-4 border-l border-secondary-200">
+                {isAdmin && (
+                  <Link 
+                    to="/admin" 
+                    className={`font-medium transition-colors ${isActive('/admin') ? 'text-primary-500' : 'text-secondary-700 hover:text-primary-500'}`}
+                  >
+                    Admin
+                  </Link>
+                )}
+                <Link 
+                  to="/dashboard" 
+                  className={`font-medium transition-colors ${isActive('/dashboard') ? 'text-primary-500' : 'text-secondary-700 hover:text-primary-500'}`}
+                >
+                  Dashboard
+                </Link>
+                <button
+                  onClick={handleLogout}
+                  className="text-secondary-700 hover:text-primary-500 transition-colors font-medium"
+                >
+                  Logout
+                </button>
+              </div>
+            ) : (
+              <div className="flex items-center space-x-4 pl-4 border-l border-secondary-200">
+                <Link 
+                  to="/login" 
+                  className="text-secondary-700 hover:text-primary-500 transition-colors font-medium"
+                >
+                  Login
+                </Link>
+                <Link 
+                  to="/register" 
+                  className="bg-primary-500 text-white hover:bg-primary-600 px-6 py-2 rounded-lg shadow transition-all font-medium"
+                >
+                  Register
+                </Link>
+              </div>
+            )}
+            
             <Link 
               to="/contact" 
               className="bg-primary-500 text-white hover:bg-primary-600 px-6 py-2 rounded-lg shadow transition-all font-medium"
@@ -66,7 +116,13 @@ const Header = () => {
           </nav>
         </div>
         
-        <MobileMenu isOpen={mobileMenuOpen} onClose={() => setMobileMenuOpen(false)} />
+        <MobileMenu 
+          isOpen={mobileMenuOpen} 
+          onClose={() => setMobileMenuOpen(false)}
+          isAuthenticated={isAuthenticated}
+          isAdmin={isAdmin}
+          onLogout={handleLogout}
+        />
       </header>
     </>
   );

@@ -4,6 +4,9 @@ import Header from '../components/Layout/Header';
 import Footer from '../components/Layout/Footer';
 import Button from '../components/UI/Button';
 import BackToTop from '../components/Shared/BackToTop';
+import uploadService from '../services/uploadService';
+
+
 
 const Home = () => {
   return (
@@ -152,11 +155,16 @@ const Home = () => {
             <div className="card-hover bg-white rounded-2xl overflow-hidden shadow-md border border-secondary-100">
               <Link to="/products#corrugated" className="block">
                 <div className="aspect-video overflow-hidden relative">
-                  <img 
-                    src="https://images.unsplash.com/photo-1607082348824-0a96f2a4b9da?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80" 
+                 // For each product card image, replace with:
+                <img 
+                    src={uploadService.getProductImageUrl('https://images.unsplash.com/photo-1607082348824-0a96f2a4b9da?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80')}
                     alt="Corrugated packaging solutions" 
                     className="w-full h-full object-cover transition-transform duration-500 hover:scale-110"
-                  />
+                      onError={(e) => {
+                          e.target.onerror = null;
+                          e.target.src = 'https://images.unsplash.com/photo-1581091226033-d5c48150dbaa?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80';
+                       }}
+                />
                   <div className="absolute top-4 right-4 bg-primary-500 text-white text-sm font-medium px-3 py-1 rounded-full">
                     Popular
                   </div>
@@ -182,9 +190,13 @@ const Home = () => {
               <Link to="/products#flexible" className="block">
                 <div className="aspect-video overflow-hidden">
                   <img 
-                    src="https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80" 
+                    src={uploadService.getProductImageUrl("https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80")} 
                     alt="Flexible packaging materials" 
                     className="w-full h-full object-cover transition-transform duration-500 hover:scale-110"
+                    onError={(e) => {
+                          e.target.onerror = null;
+                          e.target.src = 'https://images.unsplash.com/photo-1581091226033-d5c48150dbaa?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80';
+                       }}
                   />
                 </div>
                 <div className="p-6">
@@ -207,9 +219,13 @@ const Home = () => {
             <div className="card-hover bg-white rounded-2xl overflow-hidden shadow-md border border-secondary-100">
               <div className="aspect-video overflow-hidden">
                 <img 
-                  src="https://images.unsplash.com/photo-1581091226033-d5c48150dbaa?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80" 
+                   src={uploadService.getProductImageUrl("https://images.unsplash.com/photo-1581091226033-d5c48150dbaa?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80")} 
                   alt="Paper core tubes and cylinders" 
                   className="w-full h-full object-cover transition-transform duration-500 hover:scale-110"
+                  onError={(e) => {
+                          e.target.onerror = null;
+                          e.target.src = 'https://images.unsplash.com/photo-1581091226033-d5c48150dbaa?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80';
+                       }}
                 />
               </div>
               <div className="p-6">

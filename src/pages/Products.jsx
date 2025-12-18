@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import Header from '../components/Layout/Header';
 import Footer from '../components/Layout/Footer';
@@ -6,8 +6,32 @@ import Button from '../components/UI/Button';
 import ContactForm from '../components/Shared/ContactForm';
 import { products } from '../utils/productsData';
 import BackToTop from '../components/Shared/BackToTop';
+import productService from '../services/productService';
+import uploadService from '../services/uploadService';
+import { toast } from 'react-hot-toast';
 
 const Products = () => {
+  const [databaseProducts, setDatabaseProducts] = useState([]);
+  const [loading, setLoading] = useState(false);
+
+  // Fetch database products on component mount
+  useEffect(() => {
+    fetchDatabaseProducts();
+  }, []);
+
+  const fetchDatabaseProducts = async () => {
+    try {
+      setLoading(true);
+      const response = await productService.getProducts();
+      setDatabaseProducts(response.data || []);
+    } catch (error) {
+      console.error('Error fetching database products:', error);
+      // Don't show error toast - just fail silently
+    } finally {
+      setLoading(false);
+    }
+  };
+
   // Smooth scroll to section when page loads with hash
   useEffect(() => {
     if (window.location.hash) {
@@ -27,11 +51,35 @@ const Products = () => {
     }
   };
 
+  // Helper to get category display name
+  const getCategoryDisplayName = (category) => {
+    switch(category) {
+      case 'corrugated': return 'Corrugated Packaging';
+      case 'flexible': return 'Flexible Packaging';
+      case 'paper-core': return 'Paper Core';
+      case 'biomass': return 'Biomass Solutions';
+      case 'plastics': return 'Plastics';
+      default: return category;
+    }
+  };
+
+  // Helper to get category icon
+  const getCategoryIcon = (category) => {
+    switch(category) {
+      case 'corrugated': return 'fas fa-box';
+      case 'flexible': return 'fas fa-layer-group';
+      case 'paper-core': return 'fas fa-archive';
+      case 'biomass': return 'fas fa-leaf';
+      case 'plastics': return 'fas fa-industry';
+      default: return 'fas fa-cube';
+    }
+  };
+
   return (
     <div className="min-h-screen bg-gray-50 text-secondary-900 font-sans">
       <Header />
       
-      {/* Product Hero Section */}
+      {/* Product Hero Section - KEEP ORIGINAL */}
       <section className="relative py-20 bg-gradient-to-r from-primary-500 to-primary-600 overflow-hidden">
         <div className="absolute inset-0 opacity-10">
           <div className="absolute top-0 left-0 w-72 h-72 bg-white rounded-full -translate-x-1/2 -translate-y-1/2"></div>
@@ -61,7 +109,79 @@ const Products = () => {
         </div>
       </section>
 
-      {/* Products Section */}
+      {/* NEW SECTION: Database Products (Add at the top) */}
+      {databaseProducts.length > 0 && (
+        <section className="py-16 bg-secondary-50">
+          <div className="container mx-auto px-4 max-w-7xl">
+            <div className="text-center mb-12">
+              <h2 className="text-3xl md:text-4xl font-bold mb-4">
+                Available <span className="text-primary-500">Products</span>
+              </h2>
+              <p className="text-lg text-secondary-600">
+                Browse our current inventory of products ready for order.
+              </p>
+            </div>
+            
+            {loading ? (
+              <div className="flex justify-center items-center h-40">
+                <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary-500"></div>
+              </div>
+            ) : (
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {databaseProducts.map((product) => (
+                  <div key={product._id} className="bg-white rounded-xl shadow-md border border-secondary-100 overflow-hidden hover:shadow-lg transition-shadow">
+                    <div className="aspect-video overflow-hidden">
+                      {product.images && product.images.length > 0 ? (
+                        <img 
+                          src={uploadService.getProductImageUrl(product.images[0].url)} 
+                          alt={product.name}
+                          className="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
+                          onError={(e) => {
+                            e.target.onerror = null;
+                            e.target.src = `https://images.unsplash.com/photo-1581091226033-d5c48150dbaa?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80`;
+                          }}
+                        />
+                      ) : (
+                        <div className="w-full h-full bg-gradient-to-br from-primary-50 to-primary-100 flex items-center justify-center">
+                          <i className="fas fa-box text-3xl text-primary-300"></i>
+                        </div>
+                      )}
+                    </div>
+                    <div className="p-5">
+                      <div className="flex items-start mb-3">
+                        <div className="w-8 h-8 rounded-full bg-primary-100 flex items-center justify-center text-primary-600 mr-3 flex-shrink-0">
+                          <i className={getCategoryIcon(product.category)}></i>
+                        </div>
+                        <div>
+                          <h3 className="font-semibold text-lg text-secondary-900">{product.name}</h3>
+                          <p className="text-sm text-primary-600">{getCategoryDisplayName(product.category)}</p>
+                        </div>
+                      </div>
+                      <p className="text-secondary-600 text-sm mb-4 line-clamp-2">{product.description}</p>
+                      <button
+                        onClick={() => document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' })}
+                        className="text-primary-500 hover:text-primary-600 text-sm font-medium flex items-center"
+                      >
+                        Request Quote <i className="fas fa-arrow-right ml-2 text-xs"></i>
+                      </button>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
+            
+            {databaseProducts.length > 0 && (
+              <div className="text-center mt-8">
+                <p className="text-sm text-secondary-500">
+                  Showing {databaseProducts.length} product{databaseProducts.length !== 1 ? 's' : ''} from our inventory
+                </p>
+              </div>
+            )}
+          </div>
+        </section>
+      )}
+
+      {/* KEEP ORIGINAL Products Section - DO NOT CHANGE */}
       <section className="py-20 bg-white">
         <div className="container mx-auto px-4 max-w-7xl">
           {products.map((product, index) => (
@@ -129,7 +249,7 @@ const Products = () => {
         </div>
       </section>
 
-      {/* CTA Section */}
+      {/* KEEP ORIGINAL CTA Section */}
       <section className="py-20 bg-gradient-to-r from-primary-500 to-primary-600 text-white">
         <div className="container mx-auto px-4 max-w-7xl text-center">
           <h2 className="text-4xl md:text-5xl font-bold mb-6">
@@ -160,7 +280,7 @@ const Products = () => {
         </div>
       </section>
 
-      {/* Contact Section */}
+      {/* KEEP ORIGINAL Contact Section */}
       <section id="contact" className="py-20 bg-gradient-to-br from-secondary-800 to-secondary-900 text-white">
         <div className="container mx-auto px-4 max-w-7xl">
           <div className="max-w-4xl mx-auto">
@@ -241,6 +361,7 @@ const Products = () => {
   );
 };
 
+// KEEP ORIGINAL Helper functions
 const getProductIcon = (category) => {
   switch(category) {
     case 'corrugated': return <i className="fas fa-box"></i>;
