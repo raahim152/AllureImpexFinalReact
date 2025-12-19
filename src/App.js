@@ -9,7 +9,7 @@ import Home from './pages/Home';
 import About from './pages/About';
 import Products from './pages/Products';
 import Contact from './pages/Contact';
-import AdminDashboard from './pages/AdminDashboard';
+import AdminDashboard from './pages/adDash';
 import UserDashboard from './pages/UserDashboard';
 import Login from './pages/Login';
 import Register from './pages/Register';
