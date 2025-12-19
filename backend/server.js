@@ -26,7 +26,8 @@ app.get('/', (req, res) => {
       auth: '/api/auth',
       products: '/api/products',
       users: '/api/users',
-      uploads: '/api/uploads'
+      uploads: '/api/uploads',
+      messages: '/api/messages'
     }
   });
 });
@@ -43,10 +44,7 @@ app.get('/api/health', (req, res) => {
 // MongoDB Connection
 const connectDB = async () => {
   try {
-    await mongoose.connect(process.env.MONGODB_URI, {
-      useNewUrlParser: true,
-      useUnifiedTopology: true,
-    });
+    await mongoose.connect(process.env.MONGODB_URI);
     console.log('MongoDB Connected Successfully');
   } catch (error) {
     console.error('MongoDB Connection Error:', error.message);
@@ -59,12 +57,14 @@ const authRoutes = require('./routes/auth');
 const productRoutes = require('./routes/products');
 const userRoutes = require('./routes/users');
 const uploadRoutes = require('./routes/uploads');
+const messageRoutes = require('./routes/messages');
 
 // Use routes
 app.use('/api/auth', authRoutes);
 app.use('/api/products', productRoutes);
 app.use('/api/users', userRoutes);
 app.use('/api/uploads', uploadRoutes);
+app.use('/api/messages', messageRoutes);
 
 // Error handling middleware
 app.use((err, req, res, next) => {
