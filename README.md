@@ -127,24 +127,23 @@ Create the following environment files:
 
 **Backend (.env in backend/ folder):**
 ```bash
-# Database
-MONGO_URI=mongodb://localhost:27017/allureimpex
-# Or for MongoDB Atlas:
-# MONGO_URI=mongodb+srv://username:password@cluster.mongodb.net/allureimpex
-
-# JWT Authentication
-JWT_SECRET=your_super_secret_jwt_key_here_minimum_32_characters
-
-# Cloudinary (for file uploads)
-CLOUDINARY_CLOUD_NAME=your_cloud_name
-CLOUDINARY_API_KEY=your_api_key
-CLOUDINARY_API_SECRET=your_api_secret
-CLOUDINARY_FOLDER=allure-impex-uploads
-
-# Server Configuration
+# Server
 PORT=5000
 NODE_ENV=development
-```
+
+# MongoDB
+MONGODB_URI='mongodb+srv://fa23bse152_db_user:gq4wlxHZoRS1zgCC@firstcluster.pfgeniq.mongodb.net/?appName=FirstCluster'
+#mongodb+srv://fa23bse152_db_user:<db_password>@firstcluster.pfgeniq.mongodb.net/?appName=FirstCluster
+
+# JWT
+JWT_SECRET='762ce9801bfc7270a5509b82868bc77ca38ad789fb2ec55a3d62848befe1994b'
+JWT_EXPIRE=7d
+
+# Cloudinary (for file uploads - get from cloudinary.com)
+CLOUDINARY_CLOUD_NAME='dnshporji'
+CLOUDINARY_API_KEY= '997757917345144'
+CLOUDINARY_API_SECRET='thuk9BwiLo-1fELPAG8k1mdoouM'
+CLOUDINARY_UPLOAD_FOLDER='allure_impex'```
 
 **Frontend (.env in root folder):**
 ```bash
